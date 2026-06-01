@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Movie Detail</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="movie"></div>
+  <button onclick="window.location.href='index.html'">Back to list</button>
+
+  <script>
+    async function loadMovie() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      const res = await fetch(`/api/movies/${id}`); // ✅ Calls your backend
+      const movie = await res.json();
+
+      const releaseDate = new Intl.DateTimeFormat(navigator.language)
+        .format(new Date(movie.release_date));
+
+      document.getElementById('movie').innerHTML = `
+        <h2>${movie.title}</h2>
+        <p>${movie.tagline}</p>
+        <p>Release Date: ${releaseDate}</p>
+        <p>Runtime: ${movie.runtime} minutes</p>
+        <pre>${JSON.stringify(movie, null, 2)}</pre>
+      `;
+    }
+    loadMovie();
+  </script>
+</body>
+</html>
